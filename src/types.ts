@@ -15,4 +15,5 @@ export type SearchArguements = {
 export type Preferences = {
   projectName: string;
   token: string;
+  defaultPage?: string;
 };

@@ -8,7 +8,7 @@ import { Page, SearchResult, Preferences } from "./types";
 let timer: ReturnType<typeof setTimeout>;
 
 function Command() {
-  const { projectName, token } = getPreferenceValues<Preferences>();
+  const { projectName, token, defaultPage } = getPreferenceValues<Preferences>();
 
   const [pages, setPages] = useState<Page[] | null>([]);
   const [query, setQuery] = useState<string>("");
@@ -76,14 +76,16 @@ function Command() {
   return (
     <List isLoading={isLoading} onSearchTextChange={(q) => setQuery(q)}>
       {!query && (
-        <List.Section title="Open top page">
+        <List.Section title="Open default page">
           <List.Item
             key={"top"}
             icon={Icon.House}
-            title={projectName}
+            title={projectName + (defaultPage && `/${defaultPage}`)}
             actions={
               <ActionPanel>
-                <Action.OpenInBrowser url={encodeURI(`https://scrapbox.io/${projectName}/`)}></Action.OpenInBrowser>
+                <Action.OpenInBrowser
+                  url={encodeURI(`https://scrapbox.io/${projectName}/${defaultPage || ""}`)}
+                ></Action.OpenInBrowser>
               </ActionPanel>
             }
           />
