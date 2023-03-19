@@ -13,14 +13,32 @@
   "license": "MIT",
   "commands": [
     {
-      "name": "search",
-      "title": "search",
-      "description": "",
-      "mode": "view"
+      "name": "index",
+      "title": "Search Scrapbox",
+      "subtitle": "Scrapbox",
+      "description": "Search Scrapbox pages by keywords",
+      "mode": "view",
+      "preferences": [
+        {
+          "name": "projectName",
+          "title": "Project Name",
+          "description": "Your Scrapbox project name",
+          "type": "textfield",
+          "required": true
+        },
+        {
+          "name": "token",
+          "title": "Auth Token",
+          "description": "Your Scrapbox auth token",
+          "type": "textfield",
+          "required": true
+        }
+      ]
     }
   ],
   "dependencies": {
-    "@raycast/api": "^1.48.9"
+    "@raycast/api": "^1.48.9",
+    "node-fetch": "^3.3.1"
   },
   "devDependencies": {
     "@raycast/eslint-config": "1.0.5",
@@ -35,6 +53,7 @@
     "dev": "ray develop",
     "fix-lint": "ray lint --fix",
     "lint": "ray lint",
-    "publish": "ray publish"
+    "publish": "ray publish",
+    "format": "prettier --write . ./**/*.{ts,tsx}"
   }
 }
