@@ -80,7 +80,7 @@ function Command() {
           <List.Item
             key={"top"}
             icon={Icon.House}
-            title={projectName + (defaultPage && `/${defaultPage}`)}
+            title={projectName + (defaultPage ? `/${defaultPage}` : "")}
             actions={
               <ActionPanel>
                 <Action.OpenInBrowser
