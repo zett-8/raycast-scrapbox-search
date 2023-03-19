@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Action, ActionPanel, getPreferenceValues, List, LocalStorage, Icon } from "@raycast/api";
+import { useCachedState } from "@raycast/utils";
 
 import { useAPIs } from "./api";
 import { Page, SearchResult, Preferences } from "./types";
@@ -11,7 +12,7 @@ function Command() {
 
   const [pages, setPages] = useState<Page[] | null>([]);
   const [query, setQuery] = useState<string>("");
-  const [cachedPages, setCachedPages] = useState<Page[] | null>([]);
+  const [cachedPages, setCachedPages] = useCachedState<Page[] | null>("cachedPages");
   const [filteredPages, setFilteredPages] = useState<Page[] | null>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const api = useAPIs(projectName, token);
