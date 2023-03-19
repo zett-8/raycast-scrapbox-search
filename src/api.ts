@@ -14,7 +14,7 @@ export function useAPIs(projectName: string, token: string) {
       return fetch(encodeURI(`https://scrapbox.io/api/pages/${projectName}/search/query?q=${searchQuery}`), option);
     },
     fetchRecentlyAccessedPages: async function () {
-      return fetch(`https://scrapbox.io/api/pages/${projectName}?sort=accessed&limit=1000`, option);
+      return fetch(encodeURI(`https://scrapbox.io/api/pages/${projectName}?sort=accessed&limit=1000`), option);
     },
   };
 }
