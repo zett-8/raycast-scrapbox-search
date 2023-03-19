@@ -75,6 +75,21 @@ function Command() {
 
   return (
     <List isLoading={isLoading} onSearchTextChange={(q) => setQuery(q)}>
+      {!query && (
+        <List.Section title="Open top page">
+          <List.Item
+            key={"top"}
+            icon={Icon.House}
+            title={projectName}
+            actions={
+              <ActionPanel>
+                <Action.OpenInBrowser url={encodeURI(`https://scrapbox.io/${projectName}/`)}></Action.OpenInBrowser>
+              </ActionPanel>
+            }
+          />
+        </List.Section>
+      )}
+
       {query && !isLoading && pages?.length === 0 && (
         <List.Section title="Create new page">
           <List.Item
