@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { Action, ActionPanel, getPreferenceValues, List, LocalStorage, Icon } from "@raycast/api";
+import { Action, ActionPanel, getPreferenceValues, List, Icon } from "@raycast/api";
 import { useCachedState } from "@raycast/utils";
 
 import { useAPIs } from "./api";
 import { Page, SearchResult, Preferences } from "./types";
 
 let timer: ReturnType<typeof setTimeout>;
+let reqController: AbortController;
 
 function Command() {
   const { projectName, token, defaultPage } = getPreferenceValues<Preferences>();
@@ -19,18 +20,29 @@ function Command() {
 
   const searchByQuery = async (query: string) => {
     if (!query) {
+      timer && clearTimeout(timer);
+      reqController && reqController.abort();
       setPages([]);
       return;
     }
 
     if (timer) clearTimeout(timer);
+    if (reqController) reqController.abort();
+
     timer = setTimeout(async () => {
       setIsLoading(true);
-      const res = await api.searchByQuery(query);
-      setIsLoading(false);
+      const [req, ctl] = api.searchByQuery(query);
+      reqController = ctl;
 
-      const json = (await res.json()) as SearchResult;
-      json?.pages && setPages(json.pages);
+      try {
+        const res = await req;
+        const json = (await res.json()) as SearchResult;
+        json?.pages && setPages(json.pages);
+      } catch (e) {
+        if (e instanceof Error && e.name === "AbortError") console.log("aborted");
+      }
+
+      setIsLoading(false);
     }, 100);
   };
 
@@ -50,13 +62,6 @@ function Command() {
     setFilteredPages(filtered || []);
   };
 
-  const loadCachedPages = async () => {
-    const cache = (await LocalStorage.getItem("cachedPages")) || "[]";
-    const cachedPages: Page[] = JSON.parse(String(cache));
-
-    cachedPages.length && setCachedPages(cachedPages);
-  };
-
   const fetchRecentlyAccessedPages = async () => {
     const res = await api.fetchRecentlyAccessedPages();
     const json = (await res.json()) as SearchResult;
@@ -64,7 +69,6 @@ function Command() {
   };
 
   useEffect(() => {
-    loadCachedPages();
     fetchRecentlyAccessedPages();
   }, []);
 
