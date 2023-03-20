@@ -1,81 +1,81 @@
-import { useEffect, useState } from "react";
-import { Action, ActionPanel, getPreferenceValues, List, Icon } from "@raycast/api";
-import { useCachedState } from "@raycast/utils";
+import { useEffect, useState } from 'react'
+import { Action, ActionPanel, getPreferenceValues, List, Icon } from '@raycast/api'
+import { useCachedState } from '@raycast/utils'
 
-import { useAPIs } from "./api";
-import { Page, SearchResult, Preferences } from "./types";
+import { useAPIs } from './api'
+import { Page, SearchResult, Preferences } from './types'
 
-let timer: ReturnType<typeof setTimeout>;
-let reqController: AbortController;
+let timer: ReturnType<typeof setTimeout>
+let reqController: AbortController
 
 function Command() {
-  const { projectName, token, defaultPage } = getPreferenceValues<Preferences>();
+  const { projectName, token, defaultPage } = getPreferenceValues<Preferences>()
 
-  const [pages, setPages] = useState<Page[] | null>([]);
-  const [query, setQuery] = useState<string>("");
-  const [cachedPages, setCachedPages] = useCachedState<Page[] | null>("cachedPages");
-  const [filteredPages, setFilteredPages] = useState<Page[] | null>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const api = useAPIs(projectName, token);
+  const [pages, setPages] = useState<Page[] | null>([])
+  const [query, setQuery] = useState<string>('')
+  const [cachedPages, setCachedPages] = useCachedState<Page[] | null>('cachedPages')
+  const [filteredPages, setFilteredPages] = useState<Page[] | null>([])
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const api = useAPIs(projectName, token)
 
   const searchByQuery = async (query: string) => {
     if (!query) {
-      timer && clearTimeout(timer);
-      reqController && reqController.abort();
-      setPages([]);
-      return;
+      timer && clearTimeout(timer)
+      reqController && reqController.abort()
+      setPages([])
+      return
     }
 
-    if (timer) clearTimeout(timer);
-    if (reqController) reqController.abort();
+    if (timer) clearTimeout(timer)
+    if (reqController) reqController.abort()
 
     timer = setTimeout(async () => {
-      setIsLoading(true);
-      const [req, ctl] = api.searchByQuery(query);
-      reqController = ctl;
+      setIsLoading(true)
+      const [req, ctl] = api.searchByQuery(query)
+      reqController = ctl
 
       try {
-        const res = await req;
-        const json = (await res.json()) as SearchResult;
-        json?.pages && setPages(json.pages);
+        const res = await req
+        const json = (await res.json()) as SearchResult
+        json?.pages && setPages(json.pages)
       } catch (e) {
-        if (e instanceof Error && e.name === "AbortError") console.log("aborted");
+        if (e instanceof Error && e.name === 'AbortError') console.log('request aborted')
       }
 
-      setIsLoading(false);
-    }, 100);
-  };
+      setIsLoading(false)
+    }, 100)
+  }
 
   const filterCachedPages = (query: string) => {
     if (!query) {
-      setFilteredPages([]);
-      return;
+      setFilteredPages([])
+      return
     }
 
-    const tokens = query.toLowerCase().split(" ");
+    const tokens = query.toLowerCase().split(' ')
 
     const filtered = cachedPages?.filter((page: Page) => {
-      const title = page.title.toLowerCase();
-      return tokens.every((token) => title.includes(token));
-    });
+      const title = page.title.toLowerCase()
+      return tokens.every((token) => title.includes(token))
+    })
 
-    setFilteredPages(filtered || []);
-  };
+    setFilteredPages(filtered || [])
+  }
 
   const fetchRecentlyAccessedPages = async () => {
-    const res = await api.fetchRecentlyAccessedPages();
-    const json = (await res.json()) as SearchResult;
-    json?.pages && setCachedPages(json.pages);
-  };
+    const res = await api.fetchRecentlyAccessedPages()
+    const json = (await res.json()) as SearchResult
+    json?.pages && setCachedPages(json.pages)
+  }
 
   useEffect(() => {
-    fetchRecentlyAccessedPages();
-  }, []);
+    fetchRecentlyAccessedPages()
+  }, [])
 
   useEffect(() => {
-    filterCachedPages(query);
-    searchByQuery(query);
-  }, [query]);
+    filterCachedPages(query)
+    searchByQuery(query)
+  }, [query])
 
   return (
     <List isLoading={isLoading} onSearchTextChange={(q) => setQuery(q)}>
@@ -83,13 +83,13 @@ function Command() {
       {!query && (
         <List.Section title="Open default page">
           <List.Item
-            key={"top"}
+            key={'top'}
             icon={Icon.House}
-            title={projectName + (defaultPage ? `/${defaultPage}` : "")}
+            title={projectName + (defaultPage ? `/${defaultPage}` : '')}
             actions={
               <ActionPanel>
                 <Action.OpenInBrowser
-                  url={encodeURI(`https://scrapbox.io/${projectName}/${defaultPage || ""}`)}
+                  url={encodeURI(`https://scrapbox.io/${projectName}/${defaultPage || ''}`)}
                 ></Action.OpenInBrowser>
               </ActionPanel>
             }
@@ -122,7 +122,7 @@ function Command() {
             key={page.id}
             icon={Icon.MagnifyingGlass}
             title={page.title}
-            subtitle={page.lines?.[0] || ""}
+            subtitle={page.lines?.[0] || ''}
             actions={
               <ActionPanel>
                 <Action.OpenInBrowser
@@ -152,7 +152,7 @@ function Command() {
         ))}
       </List.Section>
     </List>
-  );
+  )
 }
 
-export default Command;
+export default Command

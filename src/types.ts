@@ -1,19 +1,19 @@
 export type Page = {
-  id: string;
-  title: string;
-  lines: string[];
-};
+  id: string
+  title: string
+  lines: string[]
+}
 
 export type SearchResult = {
-  pages: Page[];
-};
+  pages: Page[]
+}
 
 export type SearchArguements = {
-  searchQuery?: string;
-};
+  searchQuery?: string
+}
 
 export type Preferences = {
-  projectName: string;
-  token: string;
-  defaultPage?: string;
-};
+  projectName: string
+  token: string
+  defaultPage?: string
+}
