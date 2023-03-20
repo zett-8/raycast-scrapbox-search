@@ -75,6 +75,7 @@ function Command() {
 
   return (
     <List isLoading={isLoading} onSearchTextChange={(q) => setQuery(q)}>
+      {/* show default page when keywords typed */}
       {!query && (
         <List.Section title="Open default page">
           <List.Item
@@ -92,6 +93,7 @@ function Command() {
         </List.Section>
       )}
 
+      {/* create new page when there's no matching page */}
       {query && !isLoading && pages?.length === 0 && (
         <List.Section title="Create new page">
           <List.Item
@@ -109,6 +111,7 @@ function Command() {
         </List.Section>
       )}
 
+      {/* search result */}
       <List.Section title="Search">
         {pages?.map((page: Page) => (
           <List.Item
@@ -127,36 +130,22 @@ function Command() {
         ))}
       </List.Section>
 
+      {/* recently accessed pages */}
       <List.Section title="Recent Titles">
-        {filteredPages?.length
-          ? filteredPages?.map((page: Page) => (
-              <List.Item
-                key={page.id}
-                icon={Icon.Clock}
-                title={page.title}
-                actions={
-                  <ActionPanel>
-                    <Action.OpenInBrowser
-                      url={encodeURI(`https://scrapbox.io/${projectName}/${page.title}`)}
-                    ></Action.OpenInBrowser>
-                  </ActionPanel>
-                }
-              />
-            ))
-          : cachedPages?.map((page: Page) => (
-              <List.Item
-                key={page.id}
-                icon={Icon.Clock}
-                title={page.title}
-                actions={
-                  <ActionPanel>
-                    <Action.OpenInBrowser
-                      url={encodeURI(`https://scrapbox.io/${projectName}/${page.title}`)}
-                    ></Action.OpenInBrowser>
-                  </ActionPanel>
-                }
-              />
-            ))}
+        {((filteredPages?.length && filteredPages) || cachedPages || []).map((page: Page) => (
+          <List.Item
+            key={page.id}
+            icon={Icon.Clock}
+            title={page.title}
+            actions={
+              <ActionPanel>
+                <Action.OpenInBrowser
+                  url={encodeURI(`https://scrapbox.io/${projectName}/${page.title}`)}
+                ></Action.OpenInBrowser>
+              </ActionPanel>
+            }
+          />
+        ))}
       </List.Section>
     </List>
   );
