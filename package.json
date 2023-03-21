@@ -15,7 +15,7 @@
   "commands": [
     {
       "name": "index",
-      "title": "Search Scrapbox",
+      "title": "Scrapbox Search",
       "subtitle": "Scrapbox",
       "description": "Search Scrapbox pages by keywords",
       "mode": "view",
