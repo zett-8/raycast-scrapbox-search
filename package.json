@@ -1,8 +1,8 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
-  "name": "search-scrapbox",
-  "title": "Search Scrapbox",
-  "description": "Search Scrapbox pages by keywords or create a new page if not exists",
+  "name": "scrapbox-search",
+  "title": "Scrapbox Search",
+  "description": "Search Scrapbox pages and open quickly.",
   "icon": "command-icon.png",
   "author": "zett-8",
   "owner": "zett",
