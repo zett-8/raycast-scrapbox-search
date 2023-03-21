@@ -98,7 +98,7 @@ function Command() {
       )}
 
       {/* create new page when there's no matching page */}
-      {query && !isLoading && pages?.length === 0 && (
+      {query && pages?.length === 0 && (
         <List.Section title="Create new page">
           <List.Item
             key={query}
