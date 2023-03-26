@@ -1,4 +1,5 @@
-import fetch from 'node-fetch'
+import fetch, { Response } from 'node-fetch'
+import { showToast, Toast } from '@raycast/api'
 
 export function useAPIs(projectName: string, token: string) {
   const option = {
@@ -10,7 +11,7 @@ export function useAPIs(projectName: string, token: string) {
   }
 
   return {
-    searchByQuery: function (searchQuery: string): [req: Promise<any>, ctl: AbortController] {
+    searchByQuery: function (searchQuery: string): [req: Promise<Response>, ctl: AbortController] {
       const ctl = new AbortController()
       const signal = ctl.signal
 
@@ -25,5 +26,15 @@ export function useAPIs(projectName: string, token: string) {
     fetchRecentlyAccessedPages: async function () {
       return fetch(encodeURI(`https://scrapbox.io/api/pages/${projectName}?sort=accessed&limit=1000`), option)
     },
+  }
+}
+
+export const validateResponse = (res: Response) => {
+  if (!res.ok && res.status === 401) {
+    showToast({
+      style: Toast.Style.Failure,
+      title: 'Unauthorized!',
+      message: 'You need to set access token in Preferences.',
+    })
   }
 }

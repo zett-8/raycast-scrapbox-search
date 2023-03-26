@@ -32,7 +32,7 @@
           "title": "Auth Token",
           "description": "Your Scrapbox auth token",
           "type": "textfield",
-          "required": true
+          "required": false
         },
         {
           "name": "defaultPage",

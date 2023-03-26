@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Action, ActionPanel, getPreferenceValues, List, Icon } from '@raycast/api'
 import { useCachedState } from '@raycast/utils'
 
-import { useAPIs } from './api'
+import { useAPIs, validateResponse } from './api'
 import { Page, SearchResult, Preferences } from './types'
 
 let timer: ReturnType<typeof setTimeout>
@@ -36,6 +36,7 @@ function Command() {
 
       try {
         const res = await req
+        validateResponse(res)
         const json = (await res.json()) as SearchResult
         json?.pages && setPages(json.pages)
       } catch (e) {
@@ -64,6 +65,7 @@ function Command() {
 
   const fetchRecentlyAccessedPages = async () => {
     const res = await api.fetchRecentlyAccessedPages()
+    validateResponse(res)
     const json = (await res.json()) as SearchResult
     json?.pages && setCachedPages(json.pages)
   }
